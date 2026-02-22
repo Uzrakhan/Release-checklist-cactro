@@ -3,7 +3,7 @@ import axios from "axios";
 import ReleaseList from '../ReleaseList'
 import ReleaseDetail from "../ReleaseDetail";
 
-axios.defaults.baseURL = "http://localhost:5000";
+axios.defaults.baseURL = "https://release-checklist-cactro.onrender.com";
 
 export default function App() {
   const [releases, setReleases] = useState([]);
