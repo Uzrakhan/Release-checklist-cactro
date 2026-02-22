@@ -1,4 +1,5 @@
 import axios from "axios";
+import { Eye, Trash2 } from "lucide-react";
 
 const getStatus = (steps) => {
   if (steps.every((s) => !s)) return "Planned";
@@ -74,7 +75,11 @@ export default function ReleaseList({ releases, onSelect, refresh }) {
             {releases.map((r) => (
               <tr key={r._id}>
                 <td>{r.name}</td>
-                <td>{new Date(r.date).toLocaleDateString()}</td>
+                <td>{new Date(r.date).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                })}</td>
                 <td
                     style={{
                         color:
@@ -90,8 +95,19 @@ export default function ReleaseList({ releases, onSelect, refresh }) {
                 </td>
 
                 <td>
-                  <button onClick={() => onSelect(r)}>View</button>{" "}
-                  <button onClick={() => deleteRelease(r._id)}>Delete</button>
+                  <button
+                        onClick={() => onSelect(r)}
+                        style={{ border: "none", background: "transparent", cursor: "pointer" }}
+                    >
+                        <Eye size={18} />
+                    </button>
+
+                    <button
+                        onClick={() => deleteRelease(r._id)}
+                        style={{ border: "none", background: "transparent", cursor: "pointer" }}
+                    >
+                        <Trash2 size={18} />
+                    </button>
                 </td>
               </tr>
             ))}
