@@ -1,9 +1,9 @@
 import axios from "axios";
 
 const getStatus = (steps) => {
-  if (steps.every((s) => !s)) return "planned";
-  if (steps.every((s) => s)) return "done";
-  return "ongoing";
+  if (steps.every((s) => !s)) return "Planned";
+  if (steps.every((s) => s)) return "Done";
+  return "Ongoing";
 };
 
 export default function ReleaseList({ releases, onSelect, refresh }) {
@@ -23,36 +23,81 @@ export default function ReleaseList({ releases, onSelect, refresh }) {
   };
 
   return (
-    <div style={{ padding: 40 }}>
+    <div style={{ padding: 40, textAlign: "center" }}>
       <h1>ReleaseCheck</h1>
+      <p style={{ color: "#666" }}>Your all-in-one release checklist tool</p>
 
-      <button onClick={createNew}>New Release</button>
+      <div
+        style={{
+          margin: "40px auto",
+          width: "800px",
+          border: "1px solid #ccc",
+          borderRadius: 6,
+          padding: 20,
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            marginBottom: 15,
+          }}
+        >
+          <a href="#">All releases</a>
 
-      <table border="1" cellPadding="10" style={{ marginTop: 20 }}>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Date</th>
-            <th>Status</th>
-            <th />
-          </tr>
-        </thead>
+          <button
+            onClick={createNew}
+            style={{
+              background: "#6c63ff",
+              color: "white",
+              border: "none",
+              padding: "8px 16px",
+              borderRadius: 4,
+              cursor: "pointer",
+            }}
+          >
+            New release +
+          </button>
+        </div>
 
-        <tbody>
-          {releases.map((r) => (
-            <tr key={r._id}>
-              <td>{r.name}</td>
-              <td>{new Date(r.date).toLocaleDateString()}</td>
-              <td>{getStatus(r.steps)}</td>
-
-              <td>
-                <button onClick={() => onSelect(r)}>View</button>
-                <button onClick={() => deleteRelease(r._id)}>Delete</button>
-              </td>
+        <table width="100%" border="1" cellPadding="10">
+          <thead>
+            <tr>
+              <th>Release</th>
+              <th>Date</th>
+              <th>Status</th>
+              <th></th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+
+          <tbody>
+            {releases.map((r) => (
+              <tr key={r._id}>
+                <td>{r.name}</td>
+                <td>{new Date(r.date).toLocaleDateString()}</td>
+                <td
+                    style={{
+                        color:
+                        getStatus(r.steps) === "Done"
+                            ? "green"
+                            : getStatus(r.steps) === "Ongoing"
+                            ? "orange"
+                            : "gray",
+                        fontWeight: 600,
+                    }}
+                >
+                    {getStatus(r.steps)}
+                </td>
+
+                <td>
+                  <button onClick={() => onSelect(r)}>View</button>{" "}
+                  <button onClick={() => deleteRelease(r._id)}>Delete</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
