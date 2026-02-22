@@ -61,59 +61,59 @@ export default function ReleaseList({ releases, onSelect, refresh }) {
           </button>
         </div>
 
-        <table width="100%" border="1" cellPadding="10">
-          <thead>
-            <tr>
-              <th>Release</th>
-              <th>Date</th>
-              <th>Status</th>
-              <th></th>
-            </tr>
-          </thead>
+        <table
+            width="100%"
+            border="1"
+            cellPadding="12"
+            style={{ borderCollapse: "collapse" }}
+        >
+            <thead>
+                <tr>
+                <th>Release</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>View</th>
+                <th>Delete</th>
+                </tr>
+            </thead>
 
-          <tbody>
-            {releases.map((r) => (
-              <tr key={r._id}>
-                <td>{r.name}</td>
-                <td>{new Date(r.date).toLocaleDateString("en-US", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                })}</td>
-                <td
-                    style={{
-                        color:
-                        getStatus(r.steps) === "Done"
-                            ? "green"
-                            : getStatus(r.steps) === "Ongoing"
-                            ? "orange"
-                            : "gray",
-                        fontWeight: 600,
-                    }}
-                >
-                    {getStatus(r.steps)}
-                </td>
+            <tbody>
+                {releases.map((r) => (
+                <tr key={r._id}>
+                    <td>{r.name}</td>
 
-                <td>
-                  <button
-                        onClick={() => onSelect(r)}
-                        style={{ border: "none", background: "transparent", cursor: "pointer" }}
-                    >
+                    <td>
+                    {new Date(r.date).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                    })}
+                    </td>
+
+                    <td>{getStatus(r.steps)}</td>
+
+                    <td style={{ textAlign: "center" }}>
+                    <button onClick={() => onSelect(r)} style={iconBtn}>
                         <Eye size={18} />
                     </button>
+                    </td>
 
-                    <button
-                        onClick={() => deleteRelease(r._id)}
-                        style={{ border: "none", background: "transparent", cursor: "pointer" }}
-                    >
+                    <td style={{ textAlign: "center" }}>
+                    <button onClick={() => deleteRelease(r._id)} style={iconBtn}>
                         <Trash2 size={18} />
                     </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
+                    </td>
+                </tr>
+                ))}
+            </tbody>
         </table>
       </div>
     </div>
   );
 }
+
+const iconBtn = {
+  border: "none",
+  background: "transparent",
+  cursor: "pointer",
+};
