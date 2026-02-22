@@ -1,16 +1,172 @@
-# React + Vite
+# Release Checklist Tool
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A simple full-stack web application that helps developers manage and track release readiness using a checklist of steps.
 
-Currently, two official plugins are available:
+The application allows users to create releases, track completion of predefined steps, and automatically compute the release status.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## 🚀 Live Demo
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+**Frontend:** https://release-checklist-cactro.vercel.app/
+**Backend API:** https://release-checklist-cactro.onrender.com
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## ✨ Features
+
+* View list of all releases
+* Create a new release with name and due date
+* Track completion of release checklist steps
+* Automatically computed release status (planned / ongoing / done)
+* Update additional notes for each release
+* Delete a release
+* Responsive and clean UI
+
+---
+
+## 🧠 Status Logic
+
+The release status is computed automatically:
+
+* **Planned** → no steps completed
+* **Ongoing** → at least one step completed
+* **Done** → all steps completed
+
+---
+
+## 🛠 Tech Stack
+
+**Frontend**
+
+* React (Vite)
+* Axios
+
+**Backend**
+
+* Node.js
+* Express
+
+**Database**
+
+* MongoDB Atlas
+
+**Deployment**
+
+* Frontend → Vercel
+* Backend → Render
+
+---
+
+## 📡 API Endpoints
+
+### Get all releases
+
+```
+GET /releases
+```
+
+### Create release
+
+```
+POST /releases
+```
+
+### Update steps
+
+```
+PATCH /releases/:id/steps
+```
+
+### Update additional info
+
+```
+PATCH /releases/:id/info
+```
+
+### Delete release
+
+```
+DELETE /releases/:id
+```
+
+---
+
+## 🗄 Database Schema
+
+### Release
+
+| Field          | Type      | Required |
+| -------------- | --------- | -------- |
+| name           | String    | Yes      |
+| date           | Date      | Yes      |
+| additionalInfo | String    | No       |
+| steps          | Boolean[] | Yes      |
+| createdAt      | Date      | Auto     |
+
+---
+
+## 🧩 Steps
+
+Steps are predefined and shared across releases:
+
+* PR merged
+* Changelog updated
+* Tests passing
+* GitHub release created
+* Deployed to demo
+* Tested in demo
+* Production deploy
+
+---
+
+## ⚙️ Running Locally
+
+### 1. Clone repository
+
+```
+git clone https://github.com/Uzrakhan/Release-checklist-cactro
+```
+
+---
+
+### 2. Backend setup
+
+```
+cd backend
+npm install
+```
+
+Create `.env` file:
+
+```
+MONGO_URI=your_mongodb_connection_string
+```
+
+Run backend:
+
+```
+node server.js
+```
+
+---
+
+### 3. Frontend setup
+
+```
+cd frontend
+npm install
+npm run dev
+```
+
+---
+
+## 📌 Notes
+
+This is a single-user application with no authentication, as required by the assignment.
+
+---
+
+## 🙌 Author
+
+Uzra Khan
