@@ -2,13 +2,13 @@ import { useState } from "react";
 import axios from "axios";
 
 const STEPS = [
-  "PR merged",
-  "Changelog updated",
-  "Tests passing",
-  "Github release created",
-  "Deployed to demo",
-  "Tested in demo",
-  "Production deploy",
+  "All relevant Github pull requests have been merged",
+  "CHANGELOG.md files have been updated",
+  "All tests are passing",
+  "Releases in Github created",
+  "Deployed in demo",
+  "Tested thoroughly in demo",
+  "Deployed in production",
 ];
 
 export default function ReleaseDetail({ release, onBack }) {
@@ -22,6 +22,12 @@ export default function ReleaseDetail({ release, onBack }) {
     if (!data.isNew) {
       await axios.patch(`/releases/${data._id}/steps`, { steps: updated });
     }
+  };
+
+  const deleteRelease = async () => {
+    if (!data._id) return onBack();
+    await axios.delete(`/releases/${data._id}`);
+    onBack();
   };
 
   const save = async () => {
@@ -49,53 +55,118 @@ export default function ReleaseDetail({ release, onBack }) {
   };
 
   return (
-    <div style={{ padding: 40 }}>
-      <button onClick={onBack}>← Back</button>
+    <div style={{ padding: 40, textAlign: "center" }}>
+      <h1>ReleaseCheck</h1>
+      <p style={{ color: "#666" }}>Your all-in-one release checklist tool</p>
 
-      <h2>Release Detail</h2>
+      <div
+        style={{
+          margin: "40px auto",
+          width: "800px",
+          border: "1px solid #ccc",
+          borderRadius: 6,
+          padding: 20,
+          textAlign: "left",
+        }}
+      >
+        {/* breadcrumb + delete */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            marginBottom: 20,
+          }}
+        >
+          <div>
+            <a href="#" onClick={onBack}>
+              All releases
+            </a>{" "}
+            {">"} <span>{data.name || "New release"}</span>
+          </div>
 
-      <input
-        placeholder="Name"
-        value={data.name || ""}
-        onChange={(e) => setData({ ...data, name: e.target.value })}
-      />
+          {!data.isNew && (
+            <button
+              onClick={deleteRelease}
+              style={{
+                background: "#6c63ff",
+                color: "white",
+                border: "none",
+                padding: "8px 16px",
+                borderRadius: 4,
+                cursor: "pointer",
+              }}
+            >
+              Delete
+            </button>
+          )}
+        </div>
 
-      <br />
+        {/* name + date */}
+        <div style={{ display: "flex", gap: 20, marginBottom: 20 }}>
+          <div>
+            <p>Release</p>
+            <input
+              value={data.name || ""}
+              onChange={(e) => setData({ ...data, name: e.target.value })}
+            />
+          </div>
 
-      <input
-        type="datetime-local"
-        value={data.date ? data.date.slice(0, 16) : ""}
-        onChange={(e) =>
-          setData({ ...data, date: e.target.value })
-        }
-      />
+          <div>
+            <p>Date</p>
+            <input
+              type="datetime-local"
+              value={data.date ? data.date.slice(0, 16) : ""}
+              onChange={(e) =>
+                setData({ ...data, date: e.target.value })
+              }
+            />
+          </div>
+        </div>
 
-      <h3>Steps</h3>
+        {/* checklist */}
+        {STEPS.map((s, i) => (
+          <label key={i} style={{ display: "block", marginBottom: 6 }}>
+            <input
+              type="checkbox"
+              checked={data.steps?.[i] || false}
+              onChange={() => toggleStep(i)}
+            />{" "}
+            {s}
+          </label>
+        ))}
 
-      {STEPS.map((s, i) => (
-        <label key={i}>
-          <input
-            type="checkbox"
-            checked={data.steps?.[i] || false}
-            onChange={() => toggleStep(i)}
+        {/* notes */}
+        <div style={{ marginTop: 20 }}>
+          <p>Additional remarks / tasks</p>
+
+          <textarea
+            rows="5"
+            style={{ width: "100%" }}
+            placeholder="Please enter any other important notes for the release"
+            value={data.additionalInfo || ""}
+            onChange={(e) =>
+              setData({ ...data, additionalInfo: e.target.value })
+            }
           />
-          {s}
-          <br />
-        </label>
-      ))}
+        </div>
 
-      <h3>Notes</h3>
-
-      <textarea
-        value={data.additionalInfo || ""}
-        onChange={(e) =>
-          setData({ ...data, additionalInfo: e.target.value })
-        }
-      />
-
-      <br />
-
-      <button onClick={save}>Save</button>
+        {/* save */}
+        <div style={{ textAlign: "right", marginTop: 20 }}>
+          <button
+            onClick={save}
+            style={{
+              background: "#6c63ff",
+              color: "white",
+              border: "none",
+              padding: "10px 18px",
+              borderRadius: 4,
+              cursor: "pointer",
+            }}
+          >
+            Save ✓
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
