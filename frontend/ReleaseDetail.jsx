@@ -25,13 +25,26 @@ export default function ReleaseDetail({ release, onBack }) {
   };
 
   const save = async () => {
+    if (!data.name || !data.date) {
+      alert("Name and date required");
+      return;
+    }
+
+    const payload = {
+      name: data.name,
+      date: data.date,
+      additionalInfo: data.additionalInfo,
+      steps: data.steps,
+    };
+
     if (data.isNew) {
-      await axios.post("/releases", data);
+      await axios.post("/releases", payload);
     } else {
       await axios.patch(`/releases/${data._id}/info`, {
         additionalInfo: data.additionalInfo,
       });
     }
+
     onBack();
   };
 
@@ -43,7 +56,7 @@ export default function ReleaseDetail({ release, onBack }) {
 
       <input
         placeholder="Name"
-        value={data.name}
+        value={data.name || ""}
         onChange={(e) => setData({ ...data, name: e.target.value })}
       />
 
@@ -51,8 +64,10 @@ export default function ReleaseDetail({ release, onBack }) {
 
       <input
         type="datetime-local"
-        value={data.date?.slice(0, 16)}
-        onChange={(e) => setData({ ...data, date: e.target.value })}
+        value={data.date ? data.date.slice(0, 16) : ""}
+        onChange={(e) =>
+          setData({ ...data, date: e.target.value })
+        }
       />
 
       <h3>Steps</h3>
@@ -61,7 +76,7 @@ export default function ReleaseDetail({ release, onBack }) {
         <label key={i}>
           <input
             type="checkbox"
-            checked={data.steps[i]}
+            checked={data.steps?.[i] || false}
             onChange={() => toggleStep(i)}
           />
           {s}
